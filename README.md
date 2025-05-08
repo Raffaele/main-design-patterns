@@ -10,9 +10,9 @@ A **design pattern** is a general, reusable solution to a common problem that oc
 * **Communicative**: Provides a shared language for developers to discuss solutions (e.g., “Let's use the Singleton here.”).
 
 ### Creational patterns (focus on object creation)
-1. **[Singleton](#Singleton)** Ensures a class has only one instance and provides a global point of access to it.
+1. **[Singleton](#singleton)** Ensures a class has only one instance and provides a global point of access to it.
 2. **[Factory Method](#factory-method)** Lets a class defer instantiation to subclasses, promoting loose coupling.
-3. **Abstract Factory** Creates families of related or dependent objects without specifying their concrete classes.
+3. **[Abstract Factory](#abstract-factory)** Creates families of related or dependent objects without specifying their concrete classes.
 4. **Builder** Separates the construction of a complex object from its representation.
 5. **Prototype** Creates new objects by cloning an existing object (the prototype).
 6. **Dependency Injection (DI)** Involves providing objects that a class needs (its dependencies) from outside rather than creating them internally. This can be done manually or automatically using a container.
@@ -175,3 +175,4 @@ console.log(creatorB.operation());  // Output: Creator: The product says: Operat
 ### In synthesis
 The Factory Method design pattern is a powerful tool when you need flexibility in object creation or when you want to decouple the object creation process from the main logic of your application. It promotes loose coupling, scalability, and maintainability. However, it should be used judiciously, as it can add complexity and overhead when not necessary. Use it when you foresee a need for varying object creation logic or when different classes may need to create objects of different types.
 
+## Abstract Factory
