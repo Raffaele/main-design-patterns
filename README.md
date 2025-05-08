@@ -174,6 +174,67 @@ console.log(creatorB.operation());  // Output: Creator: The product says: Operat
 The Factory Method design pattern is a powerful tool when you need flexibility in object creation or when you want to decouple the object creation process from the main logic of your application. It promotes loose coupling, scalability, and maintainability. However, it should be used judiciously, as it can add complexity and overhead when not necessary. Use it when you foresee a need for varying object creation logic or when different classes may need to create objects of different types.
 
 ## Abstract Factory
+
+The **Abstract Factory** is a creational design pattern that provides an interface for creating families of related or dependent objects without specifying their concrete classes.
+
+In simpler terms, it’s a pattern that allows you to create multiple objects that are designed to work together, without knowing exactly which classes will be instantiated. It builds on the Factory Method, but instead of just one product, it handles multiple related products.
+
+### ✅ Advantages
+* **Encapsulation of object creation** You centralize the logic for instantiating families of related objects.
+* **Consistency** You ensure that objects from the same family (e.g., dark theme components) are used together
+* **Scalability** It becomes easier to add new families of products without modifying existing code
+* **Dependency inversion** The client is decoupled from the specific classes it uses
+
+## ❌ When to Avoid It
+* **Unnecessary complexity** If you don’t need to support multiple families of related objects, using this pattern may overcomplicate your code
+* **Harder to add new products** If you need to add a new component (e.g., a `Slider`), you must update every concrete factory to implement the new method
+* **Too abstract** The level of abstraction can make the code harder to follow for simple use cases
+
+## 🧠 When to Use It
+* When your code needs to work with various families of related products (e.g., UI toolkits, database drivers, cross-platform applications)
+* When you want to enforce that objects from the same family are used together
+* When your application supports multiple themes, modes, or environments
+
+### 🏗 Example Use Case
+Imagine you're building a UI library that supports both `light` and `dark` themes. You might have different sets of components (e.g., buttons, text fields) for each theme.
+
+Instead of instantiating each component manually based on the theme, the Abstract Factory lets you define:
+
+```ts
+interface UIComponentFactory {
+  createButton(): Button;
+  createInput(): Input;
+}
+
+class LightThemeFactory implements UIComponentFactory {
+  createButton() {
+    return new LightButton();
+  }
+  createInput() {
+    return new LightInput();
+  }
+}
+
+class DarkThemeFactory implements UIComponentFactory {
+  createButton() {
+    return new DarkButton();
+  }
+  createInput() {
+    return new DarkInput();
+  }
+}
+```
+Client code uses the factory without knowing which specific implementation is being used:
+
+```ts
+function renderUI(factory: UIComponentFactory) {
+  const button = factory.createButton();
+  const input = factory.createInput();
+  // Render the components
+}
+
+```
+
 ## Builder
 ## Prototype
 ## Dependency Injection (DI)
