@@ -10,7 +10,7 @@ A **design pattern** is a general, reusable solution to a common problem that oc
 * **Communicative**: Provides a shared language for developers to discuss solutions (e.g., “Let's use the Singleton here.”).
 
 ### Creational patterns (focus on object creation)
-1. **Singleton** Ensures a class has only one instance and provides a global point of access to it.
+1. **[Singleton](#signleton)** Ensures a class has only one instance and provides a global point of access to it.
 2. **Factory Method** Lets a class defer instantiation to subclasses, promoting loose coupling.
 3. **Abstract Factory** Creates families of related or dependent objects without specifying their concrete classes.
 4. **Builder** Separates the construction of a complex object from its representation.
@@ -33,3 +33,6 @@ A **design pattern** is a general, reusable solution to a common problem that oc
 7. **Template Method** Defines the skeleton of an algorithm in a method, deferring steps to subclasses.
 8. **Iterator** Provides a way to access elements of a collection sequentially without exposing its structure.
 9. **Visitor** Lets you define new operations on objects without changing their classes.
+10. **Memento** Captures and externalizes an object’s internal state without violating encapsulation, allowing the object to be restored to this state later.
+
+## Singleton
