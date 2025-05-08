@@ -14,8 +14,8 @@ A **design pattern** is a general, reusable solution to a common problem that oc
 2. **[Factory Method](#factory-method)** Lets a class defer instantiation to subclasses, promoting loose coupling.
 3. **[Abstract Factory](#abstract-factory)** Creates families of related or dependent objects without specifying their concrete classes.
 4. **[Builder](#builder)** Separates the construction of a complex object from its representation.
-5. **[Prototype](prototype)** Creates new objects by cloning an existing object (the prototype).
-6. **[Dependency Injection (DI)](dependency-injection-di)** Involves providing objects that a class needs (its dependencies) from outside rather than creating them internally. This can be done manually or automatically using a container.
+5. **[Prototype](#prototype)** Creates new objects by cloning an existing object (the prototype).
+6. **[Dependency Injection (DI)](#dependency-injection-di)** Involves providing objects that a class needs (its dependencies) from outside rather than creating them internally. This can be done manually or automatically using a container.
 ### Structural Patterns (deal with object composition)
 1. **Adapter** Allows incompatible interfaces to work together.
 2. **Decorator** Adds behavior to an object dynamically without altering its structure.
