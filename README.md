@@ -459,6 +459,83 @@ printer.print("My Report");
 * Creating React components that adapt data from a GraphQL API into a prop format expected by a legacy component
 
 ## Decorator
+The **Decorator** pattern is a *structural* design pattern that allows you to dynamically add behavior or responsibilities to an object without altering its structure or modifying its source code.
+
+Decorators wrap the original object inside a special wrapper class that implements the same interface and adds extra behavior **before or after** delegating to the original object.
+
+### 🎯 Real-World Analogy
+Think of a coffee shop. You start with a simple coffee (the core object), and then you can decorate it with milk, sugar, caramel, etc. (decorators). Each decorator enhances the coffee without changing the original coffee's structure.
+
+### 🏗 TypeScript Example
+Let's model a simple notification system that sends emails. Later, we want to add SMS and push notifications without modifying the original class.
+```ts
+// Base interface
+interface Notifier {
+  send(message: string): void;
+}
+
+// Concrete implementation
+class EmailNotifier implements Notifier {
+  send(message: string): void {
+    console.log(`Email: ${message}`);
+  }
+}
+
+// Base decorator
+class NotifierDecorator implements Notifier {
+  constructor(protected wrappee: Notifier) {}
+
+  send(message: string): void {
+    this.wrappee.send(message);
+  }
+}
+
+// Concrete decorator: SMS
+class SMSNotifier extends NotifierDecorator {
+  send(message: string): void {
+    super.send(message);
+    console.log(`SMS: ${message}`);
+  }
+}
+
+// Concrete decorator: Push
+class PushNotifier extends NotifierDecorator {
+  send(message: string): void {
+    super.send(message);
+    console.log(`Push: ${message}`);
+  }
+}
+
+// Usage
+const emailOnly = new EmailNotifier();
+const emailAndSms = new SMSNotifier(emailOnly);
+const allNotifiers = new PushNotifier(emailAndSms);
+
+allNotifiers.send("Your order has been shipped.");
+```
+Output:
+```ts
+Email: Your order has been shipped.
+SMS: Your order has been shipped.
+Push: Your order has been shipped.
+```
+### ✅ Advantages of the Decorator Pattern
+1. **Open/Closed Principle** You can add new features without altering existing code
+2. **Flexible Composition** Behavior can be combined in different ways at runtime
+3. **Avoids Class Explosion** Compared to subclassing for every variation, decorators allow modular extension
+4. **Reusable Decorators** Each decorator is self-contained and can be reused across the system
+
+### ❌ When to Avoid It
+1. **Too Many Small Classes** May result in a large number of decorator classes, making code harder to follow
+2. **Complex Debugging** Stacking multiple decorators can complicate traceability and debugging
+3. **Alternative: Function Composition** In functional programming (or modern JavaScript/TypeScript), higher-order functions or hooks might be simpler and cleaner
+
+### 🤔 When to Use It
+* When you want to add behavior dynamically to objects.
+* When subclassing would lead to an explosion of subclasses.
+* When you need to combine different responsibilities in flexible ways.
+* In UI components (e.g., React HOCs or decorators for styling, analytics, etc.).
+
 ## Facade
 ## Proxy
 ## Composite
