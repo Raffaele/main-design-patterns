@@ -11,7 +11,7 @@ A **design pattern** is a general, reusable solution to a common problem that oc
 
 ### Creational patterns (focus on object creation)
 1. **[Singleton](#Singleton)** Ensures a class has only one instance and provides a global point of access to it.
-2. **Factory Method** Lets a class defer instantiation to subclasses, promoting loose coupling.
+2. **[Factory Method](#Factory%20Method)** Lets a class defer instantiation to subclasses, promoting loose coupling.
 3. **Abstract Factory** Creates families of related or dependent objects without specifying their concrete classes.
 4. **Builder** Separates the construction of a complex object from its representation.
 5. **Prototype** Creates new objects by cloning an existing object (the prototype).
@@ -36,3 +36,25 @@ A **design pattern** is a general, reusable solution to a common problem that oc
 10. **Memento** Captures and externalizes an object’s internal state without violating encapsulation, allowing the object to be restored to this state later.
 
 ## Singleton
+The **Singleton** is a creational design pattern that ensures a class has only one instance throughout the application and provides a global point of access to that instance.
+
+In TypeScript, it's often implemented using a private constructor and a static method or property to control instance creation.
+
+### ✅ Advantages of Using a Singleton
+1. **Single Point of Access (Global State)** Ideal for managing shared resources like configuration objects, logging services, or caching layers.
+2. **Lazy Initialization** The instance is only created when needed, saving memory.
+3. **Controlled Access** Ensures consistent access and avoids creating multiple instances that could lead to inconsistent state.
+4. **Easy to Mock in Tests** In TypeScript, with proper abstraction, singletons can be mocked or stubbed for unit tests.
+
+### 🛠️ When to Use It
+1. For services that maintain global configuration or application state.
+2. When you want to control access to a resource (e.g., database connection manager).
+3. In small apps or libraries where using full dependency injection frameworks would be overkill.
+
+### ⚠️ When to Avoid Singleton
+1. **Global State Overuse** Encourages reliance on shared mutable state, which can lead to tight coupling and harder-to-maintain code.
+2. **Difficult Testing in Complex Apps** If not carefully abstracted, it can make unit testing harder due to hidden dependencies.
+3. **Concurrency Issues** In multi-threaded environments (less common in TypeScript, more in Java/Go/etc.), special care is needed to make singletons thread-safe.
+4. **Not a Replacement for Dependency Injection** Using dependency injection is often more flexible and testable.
+## Factory Method
+Lets a class defer instantiation to subclasses, promoting loose coupling.
