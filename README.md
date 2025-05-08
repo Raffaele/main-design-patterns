@@ -11,7 +11,7 @@ A **design pattern** is a general, reusable solution to a common problem that oc
 
 ### Creational patterns (focus on object creation)
 1. **[Singleton](#Singleton)** Ensures a class has only one instance and provides a global point of access to it.
-2. **[Factory Method](#Factory%20Method)** Lets a class defer instantiation to subclasses, promoting loose coupling.
+2. **[Factory Method](#factory-method)** Lets a class defer instantiation to subclasses, promoting loose coupling.
 3. **Abstract Factory** Creates families of related or dependent objects without specifying their concrete classes.
 4. **Builder** Separates the construction of a complex object from its representation.
 5. **Prototype** Creates new objects by cloning an existing object (the prototype).
@@ -170,7 +170,6 @@ console.log(creatorA.operation());  // Output: Creator: The product says: Operat
 
 const creatorB = new ConcreteCreatorB();
 console.log(creatorB.operation());  // Output: Creator: The product says: Operation B
-
 ```
 
 ### In synthesis
