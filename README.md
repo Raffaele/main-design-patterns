@@ -1,22 +1,20 @@
 # Main design patterns
-Design patterns explanation
 
-## Definition
 A **design pattern** is a general, reusable solution to a common problem that occurs within a specific context in software design. It's not finished code, but rather a template or blueprint that can be adapted to solve a particular design issue in your program.
 
-### Key points
+## Key points
 * **Proven**: Based on best practices developed over time by experienced developers.
 * **Reusable**: Helps solve problems that appear again and again in software architecture.
 * **Communicative**: Provides a shared language for developers to discuss solutions (e.g., “Let's use the Singleton here.”).
 
-### Creational patterns (focus on object creation)
+## Creational patterns (focus on object creation)
 1. **[Singleton](#singleton)** Ensures a class has only one instance and provides a global point of access to it.
 2. **[Factory Method](#factory-method)** Lets a class defer instantiation to subclasses, promoting loose coupling.
 3. **[Abstract Factory](#abstract-factory)** Creates families of related or dependent objects without specifying their concrete classes.
 4. **[Builder](#builder)** Separates the construction of a complex object from its representation.
 5. **[Prototype](#prototype)** Creates new objects by cloning an existing object (the prototype).
 6. **[Dependency Injection (DI)](#dependency-injection-di)** Involves providing objects that a class needs (its dependencies) from outside rather than creating them internally. This can be done manually or automatically using a container.
-### Structural Patterns (deal with object composition)
+## Structural Patterns (deal with object composition)
 1. **[Adapter](#adapter)** Allows incompatible interfaces to work together.
 2. **[Decorator](#decorator)** Adds behavior to an object dynamically without altering its structure.
 3. **[Facade](#facade)** Provides a simplified interface to a complex subsystem.
@@ -24,7 +22,7 @@ A **design pattern** is a general, reusable solution to a common problem that oc
 5. **[Composite](#composite)** Treats individual objects and compositions of objects uniformly.
 6. **[Bridge](#bridge)** Separates an object’s abstraction from its implementation.
 7. **[Flyweight](#flyweight)** Reduces the cost of creating and manipulating a large number of similar objects.
-### Behavioral Patterns (focus on communication between objects)
+## Behavioral Patterns (focus on communication between objects)
 1. **[Observer](observer)** Allows a subject to notify multiple observers about state changes.
 2. **[Strategy](strategy)** Enables selecting an algorithm's behavior at runtime.
 3. **[Command](#command)** Encapsulates a request as an object, allowing parameterization and queuing.
