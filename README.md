@@ -236,16 +236,179 @@ function renderUI(factory: UIComponentFactory) {
 ```
 
 ## Builder
+The **Builder** is a *creational* design pattern used to construct complex objects step-by-step. Unlike other creational patterns, the Builder allows you to produce different representations of an object using the same construction process.
+
+It’s particularly useful when:
+* You have an object with many optional fields or nested structures.
+* You want to avoid telescoping constructors (constructors with many parameters).
+* You need more control over the object creation process.
+
+### 🏗 Example Use Case
+Imagine you're creating a system to build `UserProfile` objects:
+```ts
+interface UserProfile {
+  name: string;
+  email?: string;
+  address?: string;
+  phone?: string;
+}
+```
+Using a builder:
+```ts
+class UserProfileBuilder {
+  private profile: Partial<UserProfile> = {};
+
+  setName(name: string): this {
+    this.profile.name = name;
+    return this;
+  }
+
+  setEmail(email: string): this {
+    this.profile.email = email;
+    return this;
+  }
+
+  setAddress(address: string): this {
+    this.profile.address = address;
+    return this;
+  }
+
+  build(): UserProfile {
+    if (!this.profile.name) {
+      throw new Error("Name is required");
+    }
+    return this.profile as UserProfile;
+  }
+}
+```
+Usage:
+
+```ts
+const user = new UserProfileBuilder()
+  .setName("Alice")
+  .setEmail("alice@example.com")
+  .build();
+```
+### ✅ Advantages
+* **Readable and maintainable** Especially for objects with many optional or nested properties
+* **Immutable result** You can create immutable objects in a controlled way
+* **Avoids constructor overloads** No need for many constructors with different parameters
+* **Flexible creation** Easy to reuse or customize object creation logic
+
+### ❌ When to Avoid It
+* **Simple objects** If your object only has a few fields, a simple constructor or object literal is clearer and easier
+* **Extra complexity** Introducing builders can be overkill for small applications or data models
+* **Verbose code** Requires writing a lot of boilerplate if not using automation or helper libraries
+
+### 🧠 When to Use It
+* When constructing an object requires multiple steps or complex configuration
+* When many variations of the same object need to be created
+* When an object needs to be immutable after construction but is too complex for a constructor alone
+
 ## Prototype
+The **Prototype** pattern is a *creational* design pattern that enables you to create new objects by copying (cloning) existing ones, rather than creating them from scratch.
+
+The idea is to create a prototypical instance of a class and then duplicate it whenever a new object is needed, instead of instantiating it via constructors. This is particularly useful when object creation is costly or complex.
+
+### 🏗 Example Use Case
+Imagine you're developing a system for a game where you have many types of enemies with a lot of shared configuration. Creating each enemy from scratch could be inefficient.
+```ts
+interface Enemy {
+  clone(): Enemy;
+}
+
+class Orc implements Enemy {
+  constructor(
+    public health: number,
+    public damage: number,
+    public weapon: string
+  ) {}
+
+  clone(): Enemy {
+    return new Orc(this.health, this.damage, this.weapon);
+  }
+}
+```
+Usage:
+```ts
+const baseOrc = new Orc(100, 15, "Axe");
+
+const fastOrc = baseOrc.clone();
+fastOrc.health = 80; // Customize the clone
+```
+
+### ✅ Advantages
+* **Performance** Cloning objects can be faster than creating them from scratch—especially when construction is expensive (e.g., involves file I/O or database access)
+* **Simplifies object creation** Especially when the setup is non-trivial or involves multiple steps
+* **Decouples code** You don't need to know the concrete class of the object you're copying
+* **Supports runtime configuration** New objects can be created dynamically at runtime without hard-coding their classes
+
+### ❌ When to Avoid It
+* **Shallow copies vs. deep copies** If your object contains complex or nested structures, cloning can lead to bugs if references aren't handled properly
+* **Maintenance complexity** Managing clone methods across many subclasses can become tedious and error-prone
+* **Better alternatives exist** In many modern applications, builders or factories provide more transparent and maintainable solutions
+
+### 🧠 When to Use It
+* When object creation is expensive or involves a lot of configuration
+* When you want to avoid subclassing and use object composition
+* When you want to dynamically add or change configurations at runtime without altering classes
+* When you need to keep object creation flexible and decoupled from the code that uses it
+* 
 ## Dependency Injection (DI)
+**Dependency Injection (DI)** is a *creational* design pattern (sometimes considered a structural technique as well) that allows a class to receive its dependencies from external sources rather than creating them itself.
+
+In simpler terms: instead of a class building or looking for its collaborators (e.g., services, APIs, database connections), these are “injected” from the outside—usually via the constructor, a method, or a property.
+
+### 🏗 Example in TypeScript
+Suppose you have a `UserServic`e that needs a `UserRepository` to fetch user data
+```ts
+class UserRepository {
+  getUser(id: number) {
+    return { id, name: "Alice" };
+  }
+}
+
+class UserService {
+  constructor(private userRepository: UserRepository) {}
+
+  getUserProfile(id: number) {
+    return this.userRepository.getUser(id);
+  }
+}
+```
+Here, `UserRepository` is injected into `UserService`, rather than `UserService` creating its own `UserRepository`. This makes the service more flexible and testable.
+
+### ✅ Advantages
+* **Improved Testability** You can easily mock or stub dependencies in unit tests
+* **Looser Coupling** Classes depend on abstractions, not concrete implementations, making code more maintainable and interchangeable
+* **Greater Reusability and Flexibility** Components can be reused in different contexts by simply injecting different dependencies
+* **Easier to Manage Complexity** Especially in large applications, centralizing dependency configuration (e.g., via a DI container) improves structure
+
+### ❌ When to Avoid It
+* **Overkill for Small Projects** In small apps, DI can introduce unnecessary complexity without much benefit
+* **Indirection Overload** Excessive DI can make code harder to follow—tracing what gets injected where may become confusing
+* **Hidden Dependencies** If DI is not clearly documented or structured, developers may lose sight of what a class really needs
+* **Performance Considerations** Some DI containers (especially in other languages) can introduce a startup cost, though this is negligible in most frontend TypeScript apps
+
+### 🧠 When to Use It
+* When building modular, testable components
+* In large-scale applications where dependency management is important
+* When applying inversion of control (IoC) principles
+* In Angular, which has a built-in DI framework
+* In React, often used indirectly via context providers, hooks, or custom dependency injection setups
+
+---------
 
 ## Adapter
+
 ## Decorator
 ## Facade
 ## Proxy
 ## Composite
 ## Bridge
 ## Flyweight
+
+---------
 
 ## Observer
 ## Strategy
