@@ -87,4 +87,92 @@ console.log(logger === anotherLogger); // true
 
 ```
 ## Factory Method
-Lets a class defer instantiation to subclasses, promoting loose coupling.
+The **Factory Method** pattern (Creational) defines an interface for creating objects, but it allows subclasses to alter the type of objects that will be created. Essentially, it delegates the instantiation of objects to subclasses, letting the class determine which type of object to instantiate.
+
+This pattern allows the creation of objects to be separated from their usage, providing flexibility in the object creation process.
+
+#### Structure:
+* **Product** Defines the interface for the object that is created.
+* **ConcreteProduct** Implements the Product interface. This is the specific object created by the `ConcreteCreator`.
+* **Creator** Defines the factory method, which returns a `Product` object. The creator may also define a default implementation for the factory method, but it can be overridden by subclasses.
+* **ConcreteCreator** Implements the factory method, which instantiates and returns a specific `ConcreteProduct`.
+
+#### How it works
+In the `Factory Method` pattern, instead of creating objects directly using constructors (e.g., `new ClassName()`), the client calls a factory method that’s responsible for creating the object. This allows subclasses to define the concrete type of the object they create, making it possible to change the type of object returned at runtime.
+
+### ✅ Advantages of Using Factory Method
+1. **Flexibility and Extensibility**
+    * The Factory Method provides an easy way to introduce new types of products without modifying the code that uses the factory. Subclasses can create different types of products by overriding the factory method.
+    * This promotes adherence to the Open/Closed Principle (part of **SOLID** principles), as the code is open for extension but closed for modification.
+2. **Decoupling Object Creation from Usage**
+    * The object creation logic is separated from the actual use of the object. Clients can rely on the abstract `Creator` class, and don't need to know how the object is created, leading to better abstraction and lower coupling.
+3. **Easier Maintenance**
+    * If the object creation process changes, you only need to modify the factory method, rather than changing every instance where the object is created across your codebase.
+4. **Better Organization of Code**
+    * Centralizes object creation logic in one place (the factory method), which is easier to manage, especially in large applications.
+  
+### 🛠️ When to Use Factory Method
+* **When the exact type of the object cannot be determined until runtime** If the type of object created depends on external factors (such as configuration or user input), the Factory Method provides flexibility to create the appropriate object dynamically.
+* **When you want to centralize object creation** If multiple subclasses need to create objects in a consistent way or if there is complex logic involved in creating objects, it’s useful to centralize that logic in the factory method.
+* **When you want to delegate the responsibility of creating objects to subclasses** If subclasses need to have the ability to create their own specific products (or extend functionality), a Factory Method is appropriate to achieve that flexibility.
+
+### ⚠️ When to Avoid Factory Method
+1. **When you don't need flexibility** If your system only requires a single type of object, creating that object directly (using a constructor) might be simpler and more straightforward. A Factory Method adds unnecessary complexity in such cases.
+2. **When you have simple and static object creation** If the object creation process is straightforward and doesn’t involve complex decisions or variations, introducing a Factory Method might add unnecessary abstraction and boilerplate code
+3. **When the hierarchy of creators becomes too complex** If the factory method creates products from many different subclasses, the code can become harder to manage. In these situations, the complexity might outweigh the benefits of using this pattern.
+4. **When performance is critical** Sometimes the overhead of having multiple classes for each `Creator` (especially if there are many variants) may impact performance, especially if it is called frequently. If you don't need that level of abstraction, simpler solutions might be better.
+
+```ts
+// Product Interface
+interface Product {
+  operation(): string;
+}
+
+// ConcreteProduct: Implements the Product interface
+class ConcreteProductA implements Product {
+  operation(): string {
+    return "Operation A";
+  }
+}
+
+class ConcreteProductB implements Product {
+  operation(): string {
+    return "Operation B";
+  }
+}
+
+// Creator: The factory method
+abstract class Creator {
+  abstract factoryMethod(): Product;
+
+  public operation(): string {
+    const product = this.factoryMethod();
+    return `Creator: The product says: ${product.operation()}`;
+  }
+}
+
+// ConcreteCreator: Implements the factory method
+class ConcreteCreatorA extends Creator {
+  public factoryMethod(): Product {
+    return new ConcreteProductA();
+  }
+}
+
+class ConcreteCreatorB extends Creator {
+  public factoryMethod(): Product {
+    return new ConcreteProductB();
+  }
+}
+
+// Client code
+const creatorA = new ConcreteCreatorA();
+console.log(creatorA.operation());  // Output: Creator: The product says: Operation A
+
+const creatorB = new ConcreteCreatorB();
+console.log(creatorB.operation());  // Output: Creator: The product says: Operation B
+
+```
+
+### In synthesis
+The Factory Method design pattern is a powerful tool when you need flexibility in object creation or when you want to decouple the object creation process from the main logic of your application. It promotes loose coupling, scalability, and maintainability. However, it should be used judiciously, as it can add complexity and overhead when not necessary. Use it when you foresee a need for varying object creation logic or when different classes may need to create objects of different types.
+
