@@ -15,6 +15,7 @@ A **design pattern** is a general, reusable solution to a common problem that oc
 3. **Abstract Factory** Creates families of related or dependent objects without specifying their concrete classes.
 4. **Builder** Separates the construction of a complex object from its representation.
 5. **Prototype** Creates new objects by cloning an existing object (the prototype).
+6. **Dependency Injection (DI)** Involves providing objects that a class needs (its dependencies) from outside rather than creating them internally. This can be done manually or automatically using a container.
 ### Structural Patterns (deal with object composition)
 1. **Adapter** Allows incompatible interfaces to work together.
 2. **Decorator** Adds behavior to an object dynamically without altering its structure.
@@ -36,7 +37,7 @@ A **design pattern** is a general, reusable solution to a common problem that oc
 10. **Memento** Captures and externalizes an object’s internal state without violating encapsulation, allowing the object to be restored to this state later.
 
 ## Singleton
-The **Singleton** is a creational design pattern that ensures a class has only one instance throughout the application and provides a global point of access to that instance.
+The **Singleton** (Creational) is a creational design pattern that ensures a class has only one instance throughout the application and provides a global point of access to that instance.
 
 In TypeScript, it's often implemented using a private constructor and a static method or property to control instance creation.
 
@@ -56,5 +57,34 @@ In TypeScript, it's often implemented using a private constructor and a static m
 2. **Difficult Testing in Complex Apps** If not carefully abstracted, it can make unit testing harder due to hidden dependencies.
 3. **Concurrency Issues** In multi-threaded environments (less common in TypeScript, more in Java/Go/etc.), special care is needed to make singletons thread-safe.
 4. **Not a Replacement for Dependency Injection** Using dependency injection is often more flexible and testable.
+
+```ts
+class Logger {
+  private static instance: Logger;
+
+  private constructor() {
+    // Private constructor prevents external instantiation
+  }
+
+  static getInstance(): Logger {
+    if (!Logger.instance) {
+      Logger.instance = new Logger();
+    }
+    return Logger.instance;
+  }
+
+  log(message: string) {
+    console.log(`[LOG]: ${message}`);
+  }
+}
+
+// Usage
+const logger = Logger.getInstance();
+logger.log('Singleton pattern in action');
+const anotherLogger = Logger.getInstance();
+
+console.log(logger === anotherLogger); // true
+
+```
 ## Factory Method
 Lets a class defer instantiation to subclasses, promoting loose coupling.
