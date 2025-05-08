@@ -400,6 +400,63 @@ Here, `UserRepository` is injected into `UserService`, rather than `UserService`
 ---------
 
 ## Adapter
+The **Adapter** pattern is a structural design pattern that allows objects with incompatible interfaces to work together. It acts as a bridge between two objects by wrapping one of them to match the expected interface.
+
+In essence, the Adapter pattern lets you adapt an existing class (or module) to a new interface without modifying the original code.
+### 🎯 Real-World Analogy
+Imagine a power adapter for a wall socket. Your laptop charger uses a certain plug shape, but the wall socket in a different country uses another. Instead of buying a new charger, you use an adapter to bridge the two.
+
+### 🏗 TypeScript Example
+Suppose you have a `LegacyPrinter` with an old method name, and you want to use it in a system that expects a `print()` method:
+```ts
+// Existing incompatible class
+class LegacyPrinter {
+  printDocument(doc: string) {
+    console.log(`Printing (legacy): ${doc}`);
+  }
+}
+
+// Expected interface
+interface Printer {
+  print(doc: string): void;
+}
+
+// Adapter that wraps the LegacyPrinter
+class LegacyPrinterAdapter implements Printer {
+  constructor(private legacyPrinter: LegacyPrinter) {}
+
+  print(doc: string): void {
+    this.legacyPrinter.printDocument(doc);
+  }
+}
+
+// Usage
+const legacy = new LegacyPrinter();
+const printer: Printer = new LegacyPrinterAdapter(legacy);
+
+printer.print("My Report");
+```
+### ✅ Advantages of the Adapter Pattern
+1. **Reusability** You can reuse existing code (like third-party libraries or legacy systems) without modification
+2. **Decoupling** Your main codebase remains decoupled from the specifics of the old or external interface
+3. **Improved Flexibility** You can work with multiple implementations of similar functionality by adapting them to a common interface
+4. **Single Responsibility Principle** Adapters isolate interface translation logic in a single place
+
+### ❌ When to Avoid It
+1. **Overuse Can Lead to Code Bloat** If overused, especially with poorly designed third-party APIs, adapters can become numerous and complex
+2. **Hides Bad Design** It may be used to cover up deeper issues in system design instead of refactoring incompatible parts properly
+3. **Performance Overhead** There might be a slight overhead in wrapping and delegating calls, though usually negligible
+
+### 🤔 When to Use It
+* Integrating a *legacy system* into a new application
+* Connecting two incompatible APIs or libraries
+* Allowing a system to work with multiple data sources or services without changing business logic
+* Adapting third-party code to fit your application’s interface
+
+### 🧰 Common Uses in Web Development
+* Wrapping an old REST client to match your modern fetch-based API interface
+* Creating adapters to bridge differences between two state management libraries
+* Creating React components that adapt data from a GraphQL API into a prop format expected by a legacy component
 
 ## Decorator
 ## Facade
