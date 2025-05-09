@@ -1169,6 +1169,126 @@ cart.checkout(50);  // Paid €50 with PayPal.
 * AI behavior in games (aggressive, defensive, passive strategies)
 
 ## Command
+The **Command** pattern is a *behavioral* design pattern that turns a request into a standalone object containing all information about the request — including the method to call, the method's arguments, and the receiver of the method.
+
+This allows you to:
+* Parameterize objects with operations.
+* Queue or log requests.
+* Support undoable operations.
+
+It encapsulates a request as an object, thereby decoupling the sender from the receiver.
+
+| Feature          | Description                                                      |
+| ---------------- | ---------------------------------------------------------------- |
+| **Pattern Type** | Behavioral                                                       |
+| **Intent**       | Encapsulate a request as an object                               |
+| **Best For**     | Queuing, undoable operations, decoupling caller and handler      |
+| **Downsides**    | Boilerplate, class explosion                                     |
+| **Alternatives** | Callbacks, simple functions, event emitters (for less structure) |
+
+
+### 📦 TypeScript Example
+```ts
+// Receiver
+class Light {
+  turnOn() {
+    console.log("Light is ON");
+  }
+
+  turnOff() {
+    console.log("Light is OFF");
+  }
+}
+
+// Command interface
+interface Command {
+  execute(): void;
+  undo(): void;
+}
+
+// Concrete commands
+class LightOnCommand implements Command {
+  constructor(private light: Light) {}
+
+  execute() {
+    this.light.turnOn();
+  }
+
+  undo() {
+    this.light.turnOff();
+  }
+}
+
+class LightOffCommand implements Command {
+  constructor(private light: Light) {}
+
+  execute() {
+    this.light.turnOff();
+  }
+
+  undo() {
+    this.light.turnOn();
+  }
+}
+
+// Invoker
+class RemoteControl {
+  private command?: Command;
+
+  setCommand(command: Command) {
+    this.command = command;
+  }
+
+  pressButton() {
+    this.command?.execute();
+  }
+
+  pressUndo() {
+    this.command?.undo();
+  }
+}
+
+// Usage
+const light = new Light();
+const lightOn = new LightOnCommand(light);
+const remote = new RemoteControl();
+
+remote.setCommand(lightOn);
+remote.pressButton(); // Light is ON
+remote.pressUndo();   // Light is OFF
+```
+
+### ✅ Advantages of the Command Pattern
+* **Decoupling** Sender and receiver are fully decoupled
+* **Reusability** Commands can be reused and composed
+* **Undo/Redo Support** You can keep a history of executed commands
+* **Macro Commands** Easily create batches of commands
+* **Flexible Execution** Can be queued, scheduled, or persisted
+
+### ❌ Disadvantages / When to Avoid It
+* **Overhead** Introduces many small classes or functions for each command
+* **Boilerplate** For simple tasks, it adds unnecessary complexity
+* **Verbosity** Not ideal when commands are trivial or infrequent
+
+### 🧠 When to Use the Command Pattern
+* You need to parameterize objects by an action to perform
+* You want to queue, schedule, or log operations
+* You need to support undo/redo functionality
+* You want to decouple request invocation from handling logic
+* You're implementing macro commands or transactional operations
+
+### ❌ When to Avoid It
+* There’s only one simple action being executed, and no need for decoupling
+* The overhead of creating multiple classes for each command isn’t justified
+* Undo/redo or history tracking is not a concern
+
+### 🧾 Real-World Use Cases
+* GUI buttons (e.g. Save, Undo, Redo)
+* Macro recording (e.g. a text editor or Photoshop)
+* Task queues or job scheduling systems
+* Remote controls or home automation systems
+* Transaction scripts or rollback support
+
 ## Chain of Responsibility
 ## Mediator
 ## State
