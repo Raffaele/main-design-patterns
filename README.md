@@ -1081,6 +1081,93 @@ feed.addNews("Observer Pattern in TypeScript!");
 * **Model-View-Controller (MVC)** The View observes changes in the Model
 
 ## Strategy
+The **Strategy** pattern is a *behavioral* design pattern that enables selecting an algorithm’s behavior at runtime. It defines a family of interchangeable algorithms (strategies), encapsulates each one, and makes them interchangeable without modifying the client that uses them.
+
+This pattern promotes the **Open/Closed Principle** — classes are open for extension but closed for modification
+
+| Feature          | Description                                                    |
+| ---------------- | -------------------------------------------------------------- |
+| **Pattern Type** | Behavioral                                                     |
+| **Intent**       | Select behavior/algorithm at runtime without changing the code |
+| **Best For**     | Swappable logic, configurable workflows                        |
+| **Downsides**    | More boilerplate and classes                                   |
+| **Alternatives** | Simple function injection, conditionals (if limited variation) |
+
+
+### 📦 TypeScript Example
+```ts
+// Strategy interface
+interface PaymentStrategy {
+  pay(amount: number): void;
+}
+
+// Concrete strategies
+class CreditCardPayment implements PaymentStrategy {
+  pay(amount: number): void {
+    console.log(`Paid €${amount} with Credit Card.`);
+  }
+}
+
+class PayPalPayment implements PaymentStrategy {
+  pay(amount: number): void {
+    console.log(`Paid €${amount} with PayPal.`);
+  }
+}
+
+// Context
+class ShoppingCart {
+  private strategy: PaymentStrategy;
+
+  constructor(strategy: PaymentStrategy) {
+    this.strategy = strategy;
+  }
+
+  setStrategy(strategy: PaymentStrategy) {
+    this.strategy = strategy;
+  }
+
+  checkout(amount: number) {
+    this.strategy.pay(amount);
+  }
+}
+
+// Usage
+const cart = new ShoppingCart(new CreditCardPayment());
+cart.checkout(100); // Paid €100 with Credit Card.
+
+cart.setStrategy(new PayPalPayment());
+cart.checkout(50);  // Paid €50 with PayPal.
+```
+
+### ✅ Advantages of the Strategy Pattern
+* **Flexibility** Swap algorithms without changing the context’s code
+* **Separation of Concerns** Keeps algorithm logic separated from the object using it
+* **Open/Closed Principle** Add new strategies without changing existing code
+* **Testability** Easier to unit test individual strategies in isolation
+
+### ❌ Disadvantages / When to Avoid It
+* **Increased Complexity** More classes and interfaces can make the code harder to manage
+* **Overhead** Might be overkill if only a single algorithm is ever used
+* **Client Awareness** The client must know about the different strategies to choose the right one
+
+### 🧠 When to Use the Strategy Pattern
+* You have multiple algorithms for a specific task, and you want to switch between them at runtime
+* You need to avoid large conditionals (if/else or switch) based on behavior
+* You want to isolate and organize related behaviors
+* You want to make a class behaviorally configurable
+
+### ❌ When to Avoid It
+* Only one algorithm is needed — adding strategy abstraction adds unnecessary complexity
+* The behavior never changes at runtime
+* You don’t need to encapsulate or switch logic dynamically
+
+### 🧾 Real-World Use Cases
+* Payment processing systems with multiple payment methods
+* Sorting algorithms that vary based on data type or size
+* Compression strategies (ZIP, RAR, etc.)
+* Navigation apps that offer walking, driving, or transit routes
+* AI behavior in games (aggressive, defensive, passive strategies)
+
 ## Command
 ## Chain of Responsibility
 ## Mediator
