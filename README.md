@@ -792,6 +792,100 @@ root.display();
 * **Game engines** Entities composed of child entities
 
 ## Bridge
+The **Bridge** patten is a *structural* design pattern that’s used to decouple an abstraction from its implementation so that the two can vary independently.
+
+It achieves this by splitting a class into two parts:
+* **Abstraction** the high-level control layer
+* **Implementation** the low-level operational layer
+
+| Feature         | Bridge Pattern                                                            |
+| --------------- | ------------------------------------------------------------------------- |
+| **Category**    | Structural                                                                |
+| **Main Goal**   | Separate abstraction and implementation for independent evolution         |
+| **Key Benefit** | High flexibility, low coupling                                            |
+| **Best For**    | Cross-platform UIs, plugins, external integrations, rendering abstraction |
+| **Downside**    | More classes and indirection when not needed                              |
+
+
+### 🧠 Real-World Analogy
+Imagine a remote control (abstraction) that works with multiple brands of televisions (implementations).
+You don't change the remote’s interface, but you can plug in new TV brands as long as they implement a compatible behavior
+
+The abstraction contains a reference to the implementation, and the client interacts with the abstraction, not knowing (or caring) how it’s implemented.
+
+
+### 📦 TypeScript Example
+```ts
+// Implementation interface
+interface Device {
+  enable(): void;
+  disable(): void;
+  isEnabled(): boolean;
+}
+
+// Concrete implementations
+class TV implements Device {
+  private on = false;
+  enable() { this.on = true; console.log("TV is on"); }
+  disable() { this.on = false; console.log("TV is off"); }
+  isEnabled() { return this.on; }
+}
+
+class Radio implements Device {
+  private on = false;
+  enable() { this.on = true; console.log("Radio is on"); }
+  disable() { this.on = false; console.log("Radio is off"); }
+  isEnabled() { return this.on; }
+}
+
+// Abstraction
+class RemoteControl {
+  constructor(protected device: Device) {}
+
+  togglePower() {
+    if (this.device.isEnabled()) {
+      this.device.disable();
+    } else {
+      this.device.enable();
+    }
+  }
+}
+
+// Extended abstraction
+class AdvancedRemoteControl extends RemoteControl {
+  mute() {
+    console.log("Muted the device (simulated)");
+  }
+}
+
+// Usage
+const remote = new AdvancedRemoteControl(new TV());
+remote.togglePower();
+remote.mute();
+```
+
+### ✅ Advantages of the Bridge Pattern
+* **Decouples Abstraction from Implementation** You can change either side independently
+* **Improved Scalability** Adding new abstractions or implementations doesn't require changing existing code
+* **Reduces Code Duplication** Especially useful when a class has multiple variants along two or more dimensions
+* **Promotes Composition Over Inheritance** More flexible and dynamic
+
+### ❌ When to Avoid It
+* **Unnecessary Complexity** If your abstraction-implementation layers are not expected to vary independently, the pattern may be overkill
+* **Simple Systems** In straightforward designs, Bridge can obscure what would otherwise be simple inheritance.
+
+### 🤔 When to Use It
+* You expect that abstractions and implementations will evolve separately.
+* You want to avoid a combinatorial explosion of subclasses (e.g., shape types × rendering APIs).
+* You're working with cross-platform applications (e.g., mobile apps with different native APIs).
+* You want to follow the Open/Closed Principle—adding new functionality without modifying existing code.
+
+### 🧰 Use Cases in Web Development
+* **Theming systems** UI abstractions that work with various themes
+* **Rendering engines** Frontend rendering that supports both canvas and WebGL
+* **Media players** Abstract player UI that can control various back-end streaming services
+* **Framework adapters** Bridging different APIs without rewriting the logic
+
 ## Flyweight
 
 ---------
