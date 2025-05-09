@@ -23,8 +23,8 @@ A **design pattern** is a general, reusable solution to a common problem that oc
 6. **[Bridge](#bridge)** Separates an object’s abstraction from its implementation.
 7. **[Flyweight](#flyweight)** Reduces the cost of creating and manipulating a large number of similar objects.
 ## Behavioral Patterns (focus on communication between objects)
-1. **[Observer](observer)** Allows a subject to notify multiple observers about state changes.
-2. **[Strategy](strategy)** Enables selecting an algorithm's behavior at runtime.
+1. **[Observer](#observer)** Allows a subject to notify multiple observers about state changes.
+2. **[Strategy](#strategy)** Enables selecting an algorithm's behavior at runtime.
 3. **[Command](#command)** Encapsulates a request as an object, allowing parameterization and queuing.
 4. **[Chain of Responsibility](#chain-of-responsibility)** Passes a request along a chain of handlers until one handles it.
 5. **[Mediator](#mediator)** Centralizes complex communication and control logic between objects.
