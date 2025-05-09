@@ -616,6 +616,89 @@ theater.watchMovie("Inception");
 * **UI components** simplifying interaction between multiple widgets and components
 
 ## Proxy
+The **Proxy** pattern is a structural design pattern that provides a *surrogate* or *placeholder* for another object to control access to it. Instead of interacting with the original object directly, clients use the proxy, which can add additional behavior before or after delegating the request to the real object.
+
+|Feature|Proxy pattern|
+|-------|-------------|
+|Category|Structural|
+|Main Goal|Control access to another object|
+|Key Benefit|Adds functionality like logging, security, lazy loading, caching, etc|
+|Trade-Off|Can increase complexity and hide logic flow|
+|Good For|Access control, performance tuning, separation of concerns|
+
+### 🧠 Real-World Analogy
+Think of a security guard at a vault. The guard (proxy) doesn't let everyone access the vault (real object) directly. Instead, they may check credentials, log access times, and only then grant access.
+
+### 📦 Types of Proxies
+1. **Virtual Proxy** Lazy-loads or defers creation of expensive objects
+2. **Protection Proxy** Controls access based on permissions
+3. **Remote Proxy** Represents an object in a different address space (e.g., over a network)
+4. **Logging/Monitoring Proxy** Adds logging, metrics, or auditing to method calls
+5. **Caching Proxy** Caches results to avoid repeated expensive operations
+
+### ⚙️ TypeScript Example
+```ts
+interface Image {
+  display(): void;
+}
+
+class RealImage implements Image {
+  constructor(private filename: string) {
+    this.loadFromDisk();
+  }
+
+  private loadFromDisk() {
+    console.log(`Loading ${this.filename}...`);
+  }
+
+  display() {
+    console.log(`Displaying ${this.filename}`);
+  }
+}
+
+// Proxy class
+class ProxyImage implements Image {
+  private realImage: RealImage | null = null;
+
+  constructor(private filename: string) {}
+
+  display() {
+    if (!this.realImage) {
+      this.realImage = new RealImage(this.filename); // lazy loading
+    }
+    this.realImage.display();
+  }
+}
+
+// Usage
+const image = new ProxyImage("photo.jpg");
+image.display(); // Loads and displays
+image.display(); // Only displays (no load)
+```
+
+### ✅ Advantages of Proxy
+* **Access Control** You can limit or customize access to sensitive or expensive resources
+* **Lazy Initialization** Load heavy resources only when needed
+* **Logging and Monitoring** Add behavior like logging without modifying the original class
+* **Performance Boost via Caching** Cache results in memory instead of recomputing or refetching
+
+### ❌ When to Avoid It
+* **Added Complexity** Introducing a proxy for trivial use cases can overcomplicate the code
+* **Indirect Communication** Debugging can become harder due to indirection
+* **Tight Coupling** A badly designed proxy can become tightly coupled to the real object’s implementation
+
+### 🤔 When to Use It
+* You want to **control access** to an object (authentication, authorization)
+* You want to **defer resource-heavy operations** (e.g., database or network)
+* You need to **extend behavior** without modifying the original object
+* You want to introduce logging, metrics, or monitoring transparently
+
+### 🧰 Common Use Cases in Web Development
+* **API Gateways** A backend proxy that validates, throttles, and logs incoming requests.
+* **HTTP Interceptors** Proxies for HTTP calls that inject headers, tokens, or handle errors
+* **Image Lazy Loading** Avoid loading images until they're in the viewport
+* **Memoization Utilities** Functions wrapped in a proxy to cache results
+
 ## Composite
 ## Bridge
 ## Flyweight
