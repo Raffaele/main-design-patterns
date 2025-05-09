@@ -1290,6 +1290,122 @@ remote.pressUndo();   // Light is OFF
 * Transaction scripts or rollback support
 
 ## Chain of Responsibility
+The **Chain of Responsibility** is a *behavioral* design pattern that allows an event (or request) to be passed along a chain of potential handlers until one of them handles it. Each handler either processes the request or passes it to the next handler in the chain.
+
+This pattern decouples the sender of a request from its receivers, giving multiple objects a chance to handle the request without the sender needing to know which one will do so.
+
+| Feature           | Description                                     |
+| ----------------- | ----------------------------------------------- |
+| **Pattern Type**  | Behavioral                                      |
+| **Intent**        | Pass request along a chain until it’s handled   |
+| **Best For**      | Middleware, logging, validation pipelines       |
+| **Advantages**    | Decouples sender/receiver, flexible, extensible |
+| **Disadvantages** | Harder to debug, uncertain request handling     |
+| **Common In**     | Express.js middleware, GUI event systems        |
+
+### 🧩 Key Concepts
+* **Sender** → Initiates the request
+* **Handler** → Abstract interface or class that defines how to handle or pass the request
+* **ConcreteHandler** → Specific implementations that either handle the request or delegate it
+* **Chain** → The linked sequence of handlers
+
+### ✅ Use Cases
+* Logging systems (different log levels: debug, info, error, etc.)
+* Event handling in GUI frameworks
+* Form validation pipelines
+* Request processing in middleware (e.g. Express.js)
+* Technical support escalation workflows.
+
+### 📦 TypeScript Example
+```ts
+// Handler Interface
+interface Handler {
+  setNext(handler: Handler): Handler;
+  handle(request: string): void;
+}
+
+// Abstract base handler
+abstract class AbstractHandler implements Handler {
+  private nextHandler?: Handler;
+
+  setNext(handler: Handler): Handler {
+    this.nextHandler = handler;
+    return handler;
+  }
+
+  handle(request: string): void {
+    if (this.nextHandler) {
+      this.nextHandler.handle(request);
+    } else {
+      console.log(`No handler could process the request: ${request}`);
+    }
+  }
+}
+
+// Concrete Handlers
+class InfoLogger extends AbstractHandler {
+  handle(request: string): void {
+    if (request === "info") {
+      console.log("InfoLogger: Logging info...");
+    } else {
+      super.handle(request);
+    }
+  }
+}
+
+class ErrorLogger extends AbstractHandler {
+  handle(request: string): void {
+    if (request === "error") {
+      console.log("ErrorLogger: Logging error!");
+    } else {
+      super.handle(request);
+    }
+  }
+}
+
+class CriticalLogger extends AbstractHandler {
+  handle(request: string): void {
+    if (request === "critical") {
+      console.log("CriticalLogger: Logging CRITICAL error!! 🚨");
+    } else {
+      super.handle(request);
+    }
+  }
+}
+
+// Usage
+const logger = new InfoLogger();
+logger
+  .setNext(new ErrorLogger())
+  .setNext(new CriticalLogger());
+
+logger.handle("info");     // InfoLogger: Logging info...
+logger.handle("error");    // ErrorLogger: Logging error!
+logger.handle("critical"); // CriticalLogger: Logging CRITICAL error!!
+logger.handle("debug");    // No handler could process the request: debug
+```
+### ✅ Advantages
+* **Loose Coupling** Sender doesn't know which handler will handle the request
+* **Flexibility** Easily add or remove handlers
+* **Responsibility Sharing** Multiple objects can contribute to handling
+* **Open/Closed Principle** Easy to extend without modifying existing code
+
+### ❌ Disadvantages
+* **Uncertainty** You can’t guarantee a request will be handled
+* **Debugging Difficulty** It might be hard to trace how a request flows through the chain
+* **Overhead** For simple cases, this can be overkill
+
+### 🔍 When to Use
+* You want multiple handlers to process a request, but only one (or none) will
+* The set of handlers should be dynamically changeable at runtime
+* You want to avoid tight coupling between the sender and receiver of a request
+* You’re implementing middleware, validation, logging, or authorization flows
+
+### 🚫 When to Avoid
+* A single handler will always process the request — use direct calls instead
+* The request needs a mandatory handler — Chain of Responsibility makes this non-obvious
+* The logic becomes too complex and hard to follow through multiple handlers
+
 ## Mediator
 ## State
 ## Template Method
