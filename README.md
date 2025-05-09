@@ -1613,6 +1613,93 @@ context.request(); // Handling State B, then transition
 * You don’t want the overhead of managing multiple classes
 
 ## Template Method
+The **Template Method** is a *behavioral* design pattern that defines the skeleton of an algorithm in a base class, allowing subclasses to override specific steps of that algorithm without changing its structure.
+
+In other words, it lets you define what happens and when, but delegates the how to the subclasses.
+
+| Feature                | Description                                                               |
+| ---------------------- | ------------------------------------------------------------------------- |
+| **Pattern Type**       | Behavioral                                                                |
+| **Intent**             | Define an algorithm skeleton in a base class, let subclasses refine steps |
+| **Best For**           | Processes with shared structure but customizable behavior                 |
+| **Advantages**         | Reusability, flexibility, enforces consistent structure                   |
+| **Disadvantages**      | Inheritance-heavy, less flexible than composition                         |
+| **Real-World Example** | File parsers, UI component lifecycles, form validation pipelines          |
+
+### 🔧 Key Concepts
+* The abstract class (or base class) implements a template method that outlines the steps of an algorithm
+* Some steps are implemented directly in the base class
+* Other steps are defined as abstract or hook methods, meant to be customized by subclasses
+
+### 📦 TypeScript Example
+```ts
+abstract class DataParser {
+  // The template method
+  public parseData(): void {
+    this.readData();
+    this.processData();
+    this.saveData();
+  }
+
+  protected abstract readData(): void;
+
+  protected abstract processData(): void;
+
+  protected saveData(): void {
+    console.log("Saving data to DB...");
+  }
+}
+
+class CSVParser extends DataParser {
+  protected readData(): void {
+    console.log("Reading data from CSV file");
+  }
+
+  protected processData(): void {
+    console.log("Processing CSV data");
+  }
+}
+
+class JSONParser extends DataParser {
+  protected readData(): void {
+    console.log("Reading data from JSON file");
+  }
+
+  protected processData(): void {
+    console.log("Processing JSON data");
+  }
+}
+
+// Usage
+const parser: DataParser = new JSONParser();
+parser.parseData();
+```
+### ✅ Advantages
+* **Code reuse** The common parts of the algorithm are written once in the base class
+* **Flexibility** Subclasses can define specific behaviors without rewriting the entire algorithm
+* **Enforces consistency** Ensures that the steps of the algorithm always execute in the same order
+
+### ❌ Disadvantages
+* **Inheritance dependency** Requires subclassing, which may limit flexibility compared to composition
+* **Harder to read** Following the algorithm flow can require jumping between base and subclass
+* **Rigid structure** The overall control flow is fixed; this can be a limitation if more dynamic behavior is needed
+
+### ✅ When to Use
+* You have an algorithm with fixed steps and you want to allow customization of some of those steps
+* You want to avoid code duplication across similar processes
+* You’re working within a class hierarchy where shared behavior makes sense.
+
+### 🚫 When to Avoid
+* You don't control the base class (e.g., from a third-party library)
+* You prefer composition over inheritance for better flexibility
+* The variation across subclasses is too significant for a shared structure to make sense
+
+### 🧭 Real-World Examples
+* Data import/export workflows (e.g., parsing CSV, JSON, XML)
+* Framework lifecycle methods (e.g., React’s `componentDidMount`)
+* Game AI behaviors with common strategy flow
+* Build systems or deployment pipelines
+
 ## Iterator
 ## Visitor
 ## Memento
