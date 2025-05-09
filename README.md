@@ -1701,5 +1701,95 @@ parser.parseData();
 * Build systems or deployment pipelines
 
 ## Iterator
+The **Iterator** is a *behavioral* design pattern that provides a way to access elements of a collection sequentially without exposing its underlying representation (e.g., arrays, trees, graphs, etc.).
+
+Instead of interacting with the collection directly, you use an iterator object that knows how to traverse it.
+
+| Feature                | Description                                                          |
+| ---------------------- | -------------------------------------------------------------------- |
+| **Pattern Type**       | Behavioral                                                           |
+| **Intent**             | Access collection elements without exposing the underlying structure |
+| **Best For**           | Abstracting and customizing traversal over collections               |
+| **Advantages**         | Decoupling, reuse, multiple traversals                               |
+| **Disadvantages**      | Overhead for simple use cases, verbosity                             |
+| **Real-World Example** | JS `for...of`, Redux sagas, pagination logic                         |
+
+### 🧠 Core Idea
+* Decouples how you iterate from what you’re iterating over
+* Encapsulates traversal logic into a reusable and consistent interface
+
+### 📦 TypeScript Example
+```ts
+interface Iterator<T> {
+  next(): T | null;
+  hasNext(): boolean;
+}
+
+class NameIterator implements Iterator<string> {
+  private index = 0;
+
+  constructor(private names: string[]) {}
+
+  public next(): string | null {
+    return this.hasNext() ? this.names[this.index++] : null;
+  }
+
+  public hasNext(): boolean {
+    return this.index < this.names.length;
+  }
+}
+
+class NameCollection {
+  private names: string[] = [];
+
+  public add(name: string): void {
+    this.names.push(name);
+  }
+
+  public getIterator(): Iterator<string> {
+    return new NameIterator(this.names);
+  }
+}
+
+// Usage
+const collection = new NameCollection();
+collection.add("Alice");
+collection.add("Bob");
+
+const iterator = collection.getIterator();
+
+while (iterator.hasNext()) {
+  console.log(iterator.next());
+}
+```
+
+### ✅ Advantages
+* **Encapsulation** Keeps collection logic separate from traversal logic
+* **Polymorphism** Same interface works with different types of collections
+* **Multiple Traversals** Supports multiple iterators on the same collection independently
+* **Cleaner Code** Eliminates need for manual loop indexing or conditionals
+
+### ❌ Disadvantages
+* **Overhead** Can add unnecessary complexity for simple collections
+* **Extra Classes** May require additional classes/interfaces even when native iterators exist
+* **Performance** Custom iterators may be slower than native iteration methods
+
+### ✅ When to Use
+* You need multiple or customized ways to iterate over a collection
+* You want to decouple data storage from iteration
+* You’re building your own collection class or data structure
+* You need to abstract traversal logic across different collection types.
+
+### 🚫 When to Avoid
+* For simple arrays or built-in collections with native for...of, map, or forEach
+* When performance and memory overhead are critical
+* When you're not abstracting away traversal and don't need interchangeable collection types
+
+### 🧭 Real-World Examples
+* DOM tree traversal (e.g., using TreeWalker or custom implementations)
+* File system explorers
+* UI navigation components (carousel, tab switchers)
+* Libraries like JavaScript’s built-in iterables ([Symbol.iterator])
+
 ## Visitor
 ## Memento
