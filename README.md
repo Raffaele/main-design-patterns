@@ -537,6 +537,84 @@ Push: Your order has been shipped.
 * In UI components (e.g., React HOCs or decorators for styling, analytics, etc.).
 
 ## Facade
+The **Facade** pattern is a *structural* design pattern that provides a simplified interface to a complex subsystem. It acts as a "front-facing" API that hides the complexities of the underlying components, making the system easier to use for clients.
+
+In other words, the Facade acts like a wrapper that orchestrates multiple subsystems and exposes a unified, clean interface.
+
+### 🧠 Real-World Analogy
+Think of a universal remote control (the facade). Instead of using separate remotes for your TV, sound system, and media player, the universal remote provides one simple interface to control them all, without needing to understand the internal workings of each device.
+
+### 🧪 TypeScript Example
+Imagine you’re building a home theater system. The user just wants a method like `watchMovie()`, but behind the scenes, multiple components need to work together.
+
+```ts
+// Subsystems
+class DVDPlayer {
+  on() { console.log("DVD Player ON"); }
+  play(movie: string) { console.log(`Playing movie: ${movie}`); }
+}
+
+class Projector {
+  on() { console.log("Projector ON"); }
+  setInput(source: string) { console.log(`Projector input set to: ${source}`); }
+}
+
+class SoundSystem {
+  on() { console.log("Sound System ON"); }
+  setVolume(level: number) { console.log(`Volume set to: ${level}`); }
+}
+
+// Facade
+class HomeTheaterFacade {
+  constructor(
+    private dvd: DVDPlayer,
+    private projector: Projector,
+    private sound: SoundSystem
+  ) {}
+
+  watchMovie(movie: string) {
+    console.log("Get ready to watch a movie...");
+    this.projector.on();
+    this.projector.setInput("DVD");
+    this.sound.on();
+    this.sound.setVolume(5);
+    this.dvd.on();
+    this.dvd.play(movie);
+  }
+}
+
+// Usage
+const theater = new HomeTheaterFacade(
+  new DVDPlayer(),
+  new Projector(),
+  new SoundSystem()
+);
+
+theater.watchMovie("Inception");
+```
+
+### ✅ Advantages of the Facade Pattern
+1. **Simplifies Complex APIs** Makes subsystems easier to use by exposing just the necessary functionality
+2. **Decouples Clients from Subsystems** Reduces dependencies on internal implementation details
+3. **Improves Maintainability** Changes in the subsystem don’t necessarily impact client code
+4. **Better Code Organization** Especially useful when multiple classes need to work together in a predictable sequence
+
+### ❌ When to Avoid It
+1. **Over-Simplification** Facades can hide too much, limiting the flexibility for advanced use cases
+2. **Extra Layer Overhead** If your system isn’t very complex, adding a facade may add unnecessary complexity
+3. **Encourages God Object** A badly designed facade may grow too large and become a monolithic object that violates the Single Responsibility Principle
+
+### 🤔 When to Use It
+* You have a complex system with many interacting parts, and clients only need a subset
+* You want to create a clean API for external modules while keeping internal details hidden
+* You want to organize code in a way that encapsulates related logic
+* You need to provide multiple levels of abstraction (e.g., beginner vs. advanced APIs)
+
+### 🧰 Common Uses in Web Development
+* **Abstraction over third-party libraries** e.g., creating a wrapper over Stripe or Firebase to avoid coupling your code to their APIs
+* **Service layer in applications** exposing simple methods like `createUser()` that internally handle validation, logging, API calls, etc
+* **UI components** simplifying interaction between multiple widgets and components
+
 ## Proxy
 ## Composite
 ## Bridge
