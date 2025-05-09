@@ -700,6 +700,97 @@ image.display(); // Only displays (no load)
 * **Memoization Utilities** Functions wrapped in a proxy to cache results
 
 ## Composite
+The **Composite** pattern is a *structural* design pattern that allows you to compose objects into tree-like structures to represent part-whole hierarchies. It lets clients treat individual objects and compositions of objects uniformly.
+
+In short, both leaf nodes (simple elements) and composite nodes (containers of elements) share the same interface and can be used interchangeably.
+
+| Feature            | Composite Pattern                                        |
+| ------------------ | -------------------------------------------------------- |
+| **Category**       | Structural                                               |
+| **Main Goal**      | Treat individual objects and groups uniformly            |
+| **Key Benefit**    | Simplifies code working with recursive structures        |
+| **Trade-Off**      | Can complicate structure when tree behavior isn’t needed |
+| **Best Use Cases** | UI hierarchies, file systems, nested structures          |
+
+
+### 🧠 Real-World Analogy
+Think of a folder structure in your computer:
+* A folder can contain files or other folders
+* Whether it’s a file or a folder, you can perform the same operations (like open, delete, move)
+The Composite pattern models this type of relationship in code
+
+### 📦 TypeScript Example
+
+```ts
+// Common interface
+interface Component {
+  display(indent?: string): void;
+}
+
+// Leaf
+class File implements Component {
+  constructor(private name: string) {}
+
+  display(indent: string = ''): void {
+    console.log(`${indent}- File: ${this.name}`);
+  }
+}
+
+// Composite
+class Folder implements Component {
+  private children: Component[] = [];
+
+  constructor(private name: string) {}
+
+  add(child: Component): void {
+    this.children.push(child);
+  }
+
+  display(indent: string = ''): void {
+    console.log(`${indent}+ Folder: ${this.name}`);
+    for (const child of this.children) {
+      child.display(indent + '  ');
+    }
+  }
+}
+
+// Usage
+const root = new Folder("root");
+const src = new Folder("src");
+const file1 = new File("index.ts");
+const file2 = new File("app.ts");
+
+src.add(file1);
+root.add(src);
+root.add(file2);
+
+root.display();
+```
+
+### ✅ Advantages of Composite
+* **Uniformity** Treat all components the same way, whether they’re simple or complex
+* **Scalability** Easily extend and build hierarchies
+* **Flexibility** You can change the structure of components dynamically
+* **Simplifies Client Code** Clients don’t need to distinguish between leaf and composite objects
+
+### ❌ When to Avoid It
+* **Overhead for Simple Structures** If your structure is flat or you only need leaves, the pattern introduces unnecessary complexity
+* **Can Obscure Behavior** It may be hard to understand the flow of operations in deeply nested composites
+* **Difficult to Restrict Operations** You may want different behavior for leaves and composites, but the pattern encourages uniform behavior
+
+### 🤔 When to Use It
+* You need to model a tree-like structure, such as
+    * UI components (buttons, panels, modals, etc.)
+    * File systems or menu hierarchies
+    * File systems or menu hierarchies
+* You want to apply operations across all elements in a structure uniformly
+
+### 🧰 Common Use Cases in Web Development
+* **React component trees** Components can contain other components, following a composite structure
+* **DOM manipulation libraries** Operations like `.append()`, `.remove()` apply similarly to all nodes
+* **Navigation menus** Dropdowns that contain other submenus and items
+* **Game engines** Entities composed of child entities
+
 ## Bridge
 ## Flyweight
 
