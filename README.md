@@ -1900,3 +1900,110 @@ console.log("Total Size:", sizeVisitor.getTotalSize());
 * Operations over document object models (DOM traversal).
 
 ## Memento
+The **Memento** is a *behavioral* design pattern that allows you to capture and store an object's internal state without violating encapsulation, so it can be restored later.
+
+In simple terms: it lets you "undo" changes by saving and restoring previous states of an object.
+
+### 🎯 Intent
+Capture and externalize an object’s internal state so that it can be restored later, without exposing the object’s internal structure.
+
+| Feature                | Description                                        |
+| ---------------------- | -------------------------------------------------- |
+| **Pattern Type**       | Behavioral                                         |
+| **Purpose**            | Save and restore an object's internal state safely |
+| **Key Benefit**        | Supports undo, rollback, and state recovery        |
+| **Downside**           | Potential memory usage and added complexity        |
+| **Real-World Example** | Text editors, games, any "undo" functionality      |
+
+### 🧱 Participants
+1. **Originator** The object whose state needs to be saved and restored
+2. **Memento** The snapshot object that stores the internal state
+3. **Caretaker** The manager that asks the originator to save/restore the state. It doesn’t look inside the memento
+
+### 📦 TypeScript Example
+```ts
+// Memento
+class EditorMemento {
+  constructor(private content: string) {}
+
+  getContent(): string {
+    return this.content;
+  }
+}
+
+// Originator
+class Editor {
+  private content: string = '';
+
+  type(text: string) {
+    this.content += text;
+  }
+
+  getContent(): string {
+    return this.content;
+  }
+
+  save(): EditorMemento {
+    return new EditorMemento(this.content);
+  }
+
+  restore(memento: EditorMemento) {
+    this.content = memento.getContent();
+  }
+}
+
+// Caretaker
+class History {
+  private mementos: EditorMemento[] = [];
+
+  push(memento: EditorMemento) {
+    this.mementos.push(memento);
+  }
+
+  pop(): EditorMemento | undefined {
+    return this.mementos.pop();
+  }
+}
+
+// Usage
+const editor = new Editor();
+const history = new History();
+
+editor.type("Hello ");
+history.push(editor.save());
+
+editor.type("world!");
+history.push(editor.save());
+
+console.log(editor.getContent()); // "Hello world!"
+
+editor.restore(history.pop()!);
+console.log(editor.getContent()); // "Hello "
+```
+
+### ✅ Advantages
+* **Encapsulation Is Preserved** The internal state is never exposed to external classes
+* **Undo/Redo Support** Very useful for implementing history and rollback features
+* **State Isolation** Each memento is a self-contained snapshot, reducing side effects
+
+### ❌ Disadvantages
+* **Memory Overhead** Saving many or large states can consume significant memory
+* **Serialization Complexity** If the state is complex or includes references, serialization and restoration can become tricky
+* **Boilerplate Code** You often need to write extra classes and logic for saving/restoring state
+
+### ✅ When to Use
+* You need undo/redo functionality, like in text editors, games, or graphic tools
+* You want to implement checkpoints (e.g., save game state)
+* You need to allow users to rollback after making changes.
+
+### ❌ When to Avoid
+* The object's state is too large or complex, making mementos costly
+* You don’t need full state snapshots (a simple stack of diffs may be more efficient)
+* The application has strict performance or memory constraints
+
+### 🧭 Real-World Use Cases
+* **Text editors** undo/redo
+* **Form drafts** auto-saving and recovery
+* **Games** checkpoints or save/load
+* **Workflow engines** rollback after failure
+
