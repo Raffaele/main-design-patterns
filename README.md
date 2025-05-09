@@ -1510,11 +1510,12 @@ input.value = "Hello"; // Button is now enabled
 * You want to centralize control logic that’s currently scattered across many classes
 
 ### 🚫 When to Avoid
-*Communication logic is trivial or doesn’t justify the added complexity
-You’re introducing a mediator that becomes too large and unmanageable
-You need high performance with minimal indirection
+* Communication logic is trivial or doesn’t justify the added complexity
+* You’re introducing a mediator that becomes too large and unmanageable
+* You need high performance with minimal indirection
 
 ## State
+
 ## Template Method
 ## Iterator
 ## Visitor
