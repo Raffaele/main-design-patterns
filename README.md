@@ -979,6 +979,107 @@ forest.push(new Tree(5, 6, TreeFactory.getTreeType("Pine", "DarkGreen", "Smooth"
 ---------
 
 ## Observer
+The **Observer** pattern is a *behavioral* design pattern that establishes a one-to-many dependency between objects. When the state of one object (the subject) changes, all its dependents (observers) are automatically notified and updated.
+
+This pattern promotes loose coupling between components, making it easier to scale and maintain complex systems.
+
+| Feature                | Description                                                        |
+| ---------------------- | ------------------------------------------------------------------ |
+| **Pattern Type**       | Behavioral                                                         |
+| **Problem Solved**     | Keeps objects in sync with subject state changes                   |
+| **Best For**           | Event-driven systems, reactive programming, real-time updates      |
+| **Downsides**          | Debugging difficulty, potential memory leaks, performance overhead |
+| **Common Alternative** | Pub/Sub architecture, callbacks, reactive streams                  |
+
+
+### 📦 TypeScript Example
+```ts
+// Observer interface
+interface Observer {
+  update(data: string): void;
+}
+
+// Concrete Observer
+class EmailSubscriber implements Observer {
+  constructor(private name: string) {}
+  update(data: string): void {
+    console.log(`${this.name} received update: ${data}`);
+  }
+}
+
+// Subject interface
+interface Subject {
+  subscribe(observer: Observer): void;
+  unsubscribe(observer: Observer): void;
+  notifyObservers(): void;
+}
+
+// Concrete Subject
+class NewsFeed implements Subject {
+  private observers: Observer[] = [];
+  private latestNews: string = "";
+
+  subscribe(observer: Observer): void {
+    this.observers.push(observer);
+  }
+
+  unsubscribe(observer: Observer): void {
+    this.observers = this.observers.filter(o => o !== observer);
+  }
+
+  addNews(news: string) {
+    this.latestNews = news;
+    this.notifyObservers();
+  }
+
+  notifyObservers(): void {
+    for (const observer of this.observers) {
+      observer.update(this.latestNews);
+    }
+  }
+}
+
+// Usage
+const feed = new NewsFeed();
+const user1 = new EmailSubscriber("Alice");
+const user2 = new EmailSubscriber("Bob");
+
+feed.subscribe(user1);
+feed.subscribe(user2);
+
+feed.addNews("Observer Pattern in TypeScript!");
+```
+
+### ✅ Advantages of the Observer Pattern
+* **Loose Coupling** Observers and Subjects are independent and unaware of each other's implementation details
+* **Dynamic Relationships** You can add or remove observers at runtime
+* **Scalable Event Handling** Suitable for implementing custom event systems or reactive architectures
+* **Broadcast Capability** One update can propagate to many listeners efficiently
+
+### ❌ Disadvantages / When to Avoid
+* **Memory Leaks** If observers are not properly unsubscribed, it can lead to memory leaks
+* **Complex Debugging** Chains of notifications can make debugging more difficult
+* **Performance Overhead** Notifying a large number of observers frequently may degrade performance
+* **Hidden Dependencies** Observers reacting to changes might introduce unexpected side effects
+
+### 🧠 When to Use the Observer Pattern
+* Changes in one object need to be automatically reflected in others
+* You want a flexible, decoupled communication mechanism between components
+* You're implementing an event-driven system, such as UI updates, stock tickers, or live chat
+* Your architecture benefits from a reactive data flow, such as in Redux, RxJS, or Vue’s reactivity model
+
+### ❌ When to Avoid It
+* You have a small or simple application that doesn't require dynamic updates
+* You don’t need to maintain consistency between multiple components
+* Performance and memory usage are critical, and you're dealing with many observers with high-frequency updates
+
+### 🧰 Real-World Use Cases
+* **UI frameworks** e.g., React’s setState or Angular’s EventEmitters
+* **Publish/Subscribe systems**
+* **Messaging queues**
+* **Event listeners in the DOM**
+* **Model-View-Controller (MVC)** The View observes changes in the Model
+
 ## Strategy
 ## Command
 ## Chain of Responsibility
