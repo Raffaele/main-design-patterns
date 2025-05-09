@@ -1515,6 +1515,102 @@ input.value = "Hello"; // Button is now enabled
 * You need high performance with minimal indirection
 
 ## State
+The **State** pattern is a *behavioral* design pattern that allows an object to change its behavior when its internal state changes. From the outside, it appears as if the object has changed its class.
+
+It’s particularly useful for modeling objects that have different modes, phases, or statuses, each with distinct behavior.
+
+| Feature                | Description                                                  |
+| ---------------------- | ------------------------------------------------------------ |
+| **Pattern Type**       | Behavioral                                                   |
+| **Intent**             | Allow an object to alter its behavior when its state changes |
+| **Best For**           | Finite state machines, mode switching                        |
+| **Advantages**         | Cleaner logic, scalable, maintainable                        |
+| **Disadvantages**      | Many small classes, more indirection                         |
+| **Real-World Example** | Media players (Play/Pause/Stop), ATMs, Form wizards          |
+
+### 🧠 Key Concepts
+* **Context** The main object whose behavior changes depending on its current state
+* **State interface** Declares the behavior shared across different states
+* **Concrete states** Implement the behavior specific to each state and define when and how to transition to another state
+
+### ✅ Example Use Cases
+* Media players (play, pause, stop)
+* Document lifecycle (draft, review, published)
+* User authentication (logged out, logged in, admin)
+* Traffic lights (green, yellow, red)
+* UI buttons (enabled, disabled, loading)
+
+### 📦 TypeScript Example
+```ts
+// State interface
+interface State {
+  handle(): void;
+}
+
+// Context
+class Context {
+  private state: State;
+
+  constructor(state: State) {
+    this.transitionTo(state);
+  }
+
+  transitionTo(state: State) {
+    console.log(`Transitioning to ${state.constructor.name}`);
+    this.state = state;
+    this.state['context'] = this; // allow state to call context.transitionTo
+  }
+
+  request() {
+    this.state.handle();
+  }
+}
+
+// Concrete States
+class ConcreteStateA implements State {
+  context!: Context;
+
+  handle() {
+    console.log("Handling State A. Switching to B...");
+    this.context.transitionTo(new ConcreteStateB());
+  }
+}
+
+class ConcreteStateB implements State {
+  context!: Context;
+
+  handle() {
+    console.log("Handling State B. Switching to A...");
+    this.context.transitionTo(new ConcreteStateA());
+  }
+}
+
+// Usage
+const context = new Context(new ConcreteStateA());
+context.request(); // Handling State A, then transition
+context.request(); // Handling State B, then transition
+```
+
+### ✅ Advantages
+* **Simplifies complex conditionals** Replaces large if-else or switch statements based on internal state
+* **Encapsulation of behavior** Each state is self-contained and focused on specific logic
+* **Easier to add new states** You can introduce new behavior without touching the context
+* **Improves readability** Cleaner separation of logic tied to specific states
+
+### ❌ Disadvantages
+* **Can result in many classes** Each state is usually its own class, which might feel like overhead
+* **Increased complexity** For simple scenarios, this pattern can be overkill
+* **Harder to trace flow** Transitions may become hard to follow if states transition internally
+
+### 🔍 When to Use
+* You have an object with behavior that depends on its current state
+* You need to avoid bloated conditional logic
+* You want to clearly separate behaviors tied to specific states
+
+### 🚫 When to Avoid
+* The number of states is very small and unlikely to change
+* State-dependent behavior can be handled with simple conditionals
+* You don’t want the overhead of managing multiple classes
 
 ## Template Method
 ## Iterator
