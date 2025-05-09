@@ -1792,4 +1792,111 @@ while (iterator.hasNext()) {
 * Libraries like JavaScript’s built-in iterables ([Symbol.iterator])
 
 ## Visitor
+The **Visitor** is a *behavioral* design pattern that lets you add new operations to existing object structures without modifying those structures.
+
+In essence, you move operational logic out of the objects you're operating on and into a separate Visitor object that performs the operation.
+
+| Feature                | Description                                                        |
+| ---------------------- | ------------------------------------------------------------------ |
+| **Pattern Type**       | Behavioral                                                         |
+| **Intent**             | Separate algorithms from object structures                         |
+| **Best For**           | Adding operations to stable class hierarchies                      |
+| **Advantages**         | Flexibility, separation of concerns, easier to test operations     |
+| **Disadvantages**      | Boilerplate, tight coupling with structure, harder to evolve types |
+| **Real-World Example** | AST walkers, React tree processing, report generators              |
+
+### 🧠 Core Idea
+Imagine having a set of different object types (e.g., `File`, `Folder`) and needing to perform operations like "calculate size", "export to JSON", or "print". Instead of adding those methods directly to the classes, you define them in a `Visitor`, keeping your data structures clean and separated from business logic
+
+### 📦 TypeScript Example
+Let’s model a file system with `File` and `Folder`, and apply visitors to them.
+
+```ts
+// Element interface
+interface FileSystemItem {
+  accept(visitor: Visitor): void;
+}
+
+// Concrete Elements
+class File implements FileSystemItem {
+  constructor(public name: string, public size: number) {}
+
+  accept(visitor: Visitor): void {
+    visitor.visitFile(this);
+  }
+}
+
+class Folder implements FileSystemItem {
+  constructor(public name: string, public children: FileSystemItem[]) {}
+
+  accept(visitor: Visitor): void {
+    visitor.visitFolder(this);
+  }
+}
+
+// Visitor interface
+interface Visitor {
+  visitFile(file: File): void;
+  visitFolder(folder: Folder): void;
+}
+
+// Concrete Visitor
+class SizeCalculatorVisitor implements Visitor {
+  private totalSize = 0;
+
+  visitFile(file: File): void {
+    this.totalSize += file.size;
+  }
+
+  visitFolder(folder: Folder): void {
+    folder.children.forEach(child => child.accept(this));
+  }
+
+  getTotalSize(): number {
+    return this.totalSize;
+  }
+}
+
+// Usage
+const items: FileSystemItem[] = [
+  new File("README.md", 200),
+  new Folder("src", [
+    new File("index.ts", 300),
+    new File("app.ts", 500),
+  ])
+];
+
+const sizeVisitor = new SizeCalculatorVisitor();
+
+items.forEach(item => item.accept(sizeVisitor));
+
+console.log("Total Size:", sizeVisitor.getTotalSize());
+```
+
+### ✅ Advantages
+* **Open/Closed Principle** Add new operations without modifying existing classes
+* **Separation of Concerns** Keeps data and behavior separate
+* **Double Dispatch** Allows selection of the operation based on both object type and visitor type
+
+### ❌ Disadvantages
+* **Tight Coupling to Element Structure** Every time you add a new element type, you must update all visitors
+* **Complexity** Can introduce complexity and boilerplate, especially in large hierarchies
+* **Breaks Encapsulation** Visitors may access internal state that would normally be private
+
+### ✅ When to Use
+* You have a stable object structure but need to frequently add new operations
+* You want to perform cross-cutting concerns (e.g., logging, analytics, exporting)
+* You need to apply different logic to different element types at runtime.
+
+### 🚫 When to Avoid
+* The element structure changes frequently (you’ll need to update all visitors)
+* You only need a few operations — might be overkill for simple scenarios
+* Encapsulation is critical — visitors may need access to internals.
+
+### 🧭 Real-World Examples
+* Compilers or interpreters that traverse abstract syntax trees
+* UI component trees (e.g., performing rendering or accessibility scans)
+* Serialization/deserialization routines
+* Operations over document object models (DOM traversal).
+
 ## Memento
