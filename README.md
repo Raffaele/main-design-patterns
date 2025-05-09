@@ -887,6 +887,94 @@ remote.mute();
 * **Framework adapters** Bridging different APIs without rewriting the logic
 
 ## Flyweight
+The **Flyweight** pattern is a *structural* design pattern that focuses on minimizing memory usage by sharing as much data as possible with similar objects.
+
+Instead of having many objects that each hold identical data, the Flyweight pattern allows you to store shared data externally and reuse it across multiple instances.
+
+| Feature          | Description                                                        |
+| ---------------- | ------------------------------------------------------------------ |
+| **Pattern Type** | Structural                                                         |
+| **Main Goal**    | Reduce memory footprint by sharing common object data              |
+| **Ideal For**    | Large-scale, memory-intensive systems with many similar objects    |
+| **Downside**     | More complex architecture and separation of shared vs. unique data |
+
+
+### 🎯 Core Idea
+* Intrinsic state: Shared, immutable data stored in the flyweight.
+* Extrinsic state: Data that varies per object and is passed in at runtime.
+
+### 📦 TypeScript Example
+Imagine rendering thousands of tree icons on a map
+```ts
+// Shared data (intrinsic)
+class TreeType {
+  constructor(
+    public name: string,
+    public color: string,
+    public texture: string
+  ) {}
+
+  render(x: number, y: number) {
+    console.log(`Rendering ${this.name} tree at (${x}, ${y})`);
+  }
+}
+
+// Flyweight factory
+class TreeFactory {
+  private static types: Map<string, TreeType> = new Map();
+
+  static getTreeType(name: string, color: string, texture: string): TreeType {
+    const key = `${name}_${color}_${texture}`;
+    if (!this.types.has(key)) {
+      this.types.set(key, new TreeType(name, color, texture));
+    }
+    return this.types.get(key)!;
+  }
+}
+
+// Tree object (extrinsic state)
+class Tree {
+  constructor(
+    private x: number,
+    private y: number,
+    private type: TreeType
+  ) {}
+
+  draw() {
+    this.type.render(this.x, this.y);
+  }
+}
+
+// Client usage
+const forest: Tree[] = [];
+forest.push(new Tree(1, 2, TreeFactory.getTreeType("Oak", "Green", "Rough")));
+forest.push(new Tree(3, 4, TreeFactory.getTreeType("Oak", "Green", "Rough")));
+forest.push(new Tree(5, 6, TreeFactory.getTreeType("Pine", "DarkGreen", "Smooth")));
+```
+
+### ✅ Advantages of the Flyweight Pattern
+* **Memory Efficiency** Greatly reduces memory usage by sharing common data.
+* **Performance** Improved speed for large-scale systems with many similar objects.
+* **Decouples Shared vs. Unique Data** Cleaner separation of data concerns.
+
+### ❌ Disadvantages / When to Avoid
+* **Increased Complexity** Separating intrinsic and extrinsic state can make the code harder to understand
+* **Thread Safety Concerns** If shared objects are mutable, concurrency issues can arise
+* **Limited Use Cases** Only beneficial when dealing with large numbers of objects with repeated data
+
+### 🤔 When to Use It
+* Your app creates a very large number of similar objects (e.g., 10,000+).
+* Most object data is shared (e.g., icons, styles, fonts, colors).
+* You need to optimize memory in a resource-constrained environment (e.g., games, browsers).
+* Objects can be separated into shared (intrinsic) and unique (extrinsic) properties
+
+### 🧰 Real-World Use Cases
+* **Browser DOM elements** e.g., sharing tag definitions
+* **Text rendering systems** sharing character glyphs
+* **Map markers or icons**
+* **Game development** sharing textures and sprites
+* **Font rendering** only one glyph per character type
+
 
 ---------
 
