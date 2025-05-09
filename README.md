@@ -1407,6 +1407,113 @@ logger.handle("debug");    // No handler could process the request: debug
 * The logic becomes too complex and hard to follow through multiple handlers
 
 ## Mediator
+The **Mediator** is a *behavioral* design pattern that encapsulates how a set of objects interact. It promotes loose coupling by preventing direct communication between components — instead, they communicate through a **mediator** object.
+
+Rather than each object referring to others explicitly, they refer only to the mediator, which handles the interactions. This reduces dependencies and makes the system more maintainable.
+
+| Feature                | Description                                                  |
+| ---------------------- | ------------------------------------------------------------ |
+| **Pattern Type**       | Behavioral                                                   |
+| **Intent**             | Centralize complex communication among components            |
+| **Best For**           | UI controls, chat rooms, form state management               |
+| **Advantages**         | Decouples objects, improves code organization                |
+| **Disadvantages**      | Mediator can grow too large, may overcomplicate simple flows |
+| **Real World Example** | Air traffic control system                                   |
+
+### 🧩 Key Concepts
+* **Colleagues** Components that need to communicate (e.g., UI elements, services)
+* **Mediator** Central component that facilitates communication between colleagues
+* **Concrete Mediator** A specific implementation of the mediator that defines communication rules
+
+### ✅ Use Cases
+* UI component coordination (e.g., enabling/disabling buttons based on form state)
+* Chat room systems where users don’t communicate directly
+* Air traffic control (aircraft talk to control tower, not to each other)
+* Decoupling complex workflows among many objects or modules
+
+### 📦 TypeScript Example
+```ts
+// Mediator interface
+interface Mediator {
+  notify(sender: object, event: string): void;
+}
+
+// Concrete Mediator
+class DialogMediator implements Mediator {
+  constructor(
+    private button: Button,
+    private input: TextInput
+  ) {
+    this.button.setMediator(this);
+    this.input.setMediator(this);
+  }
+
+  notify(sender: object, event: string): void {
+    if (sender === this.input && event === "inputChanged") {
+      this.button.setEnabled(this.input.value.length > 0);
+    }
+  }
+}
+
+// Components (Colleagues)
+class Component {
+  protected mediator!: Mediator;
+
+  setMediator(mediator: Mediator) {
+    this.mediator = mediator;
+  }
+}
+
+class Button extends Component {
+  private enabled = false;
+
+  setEnabled(value: boolean) {
+    this.enabled = value;
+    console.log("Button is now", value ? "enabled" : "disabled");
+  }
+}
+
+class TextInput extends Component {
+  private _value = "";
+
+  set value(val: string) {
+    this._value = val;
+    this.mediator.notify(this, "inputChanged");
+  }
+
+  get value() {
+    return this._value;
+  }
+}
+
+// Usage
+const input = new TextInput();
+const button = new Button();
+const mediator = new DialogMediator(button, input);
+
+input.value = "";      // Button is now disabled
+input.value = "Hello"; // Button is now enabled
+```
+### ✅ Advantages
+* **Decouples components** Each component only knows about the mediator, not the others
+* **Improves maintainability** Changes in interaction logic are localized to the mediator
+* **Simplifies communication logic** Prevents tangled "spaghetti code" between components.
+
+### ❌ Disadvantages
+* **Mediator can become complex** As interactions grow, the mediator might turn into a God object
+* **Single point of failure** If the mediator has a bug, it can impact all communication
+* **Overhead** Adds indirection that may be unnecessary in simple systems
+
+### 🔍 When to Use
+* You have many objects that communicate in complex but well-defined ways
+* You want to reduce coupling between components
+* You want to centralize control logic that’s currently scattered across many classes
+
+### 🚫 When to Avoid
+*Communication logic is trivial or doesn’t justify the added complexity
+You’re introducing a mediator that becomes too large and unmanageable
+You need high performance with minimal indirection
+
 ## State
 ## Template Method
 ## Iterator
